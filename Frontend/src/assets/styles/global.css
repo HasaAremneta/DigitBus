@@ -1,0 +1,24 @@
+@font-face {
+  font-family: 'Vertiga';
+  src: url('../fonts/vertiga-regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Vertiga';
+  src: url('../fonts/vertiga-bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Vertiga';
+  src: url('../fonts/vertiga-black.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Vertiga', sans-serif;
+}
