@@ -4,7 +4,7 @@
     <header class="top-nav">
       <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       <nav class="nav-links">
-        <router-link to="/conocenos">Conócenos</router-link>
+        <router-link to="/Conocenos">Conócenos</router-link>
         <!--Boton de salida de sesion-->
         <a href="#" @click.prevent="confirmarSalida">Salir</a>
         <!-- <router-link to="/login">Salir</router-link> -->
@@ -50,12 +50,6 @@ const irARuta = (ruta) => {
 // Datos de los accesos rápidos
 const accesos = [
   {
-    titulo: 'Pago rapido',
-    descripcion: 'Paga tu pasaje de forma rápida y segura.',
-    img: 'https://via.placeholder.com/150?text=Pago+Rápido',
-    ruta: '/pagoSucursal'
-  },
-  {
     titulo: 'Historial de pagos',
     descripcion: 'Consulta tu historial de pagos y transacciones.',
     img: 'https://via.placeholder.com/150?text=Historial+Pagos',
@@ -65,19 +59,19 @@ const accesos = [
     titulo: 'recargas',
     descripcion: 'Recarga tu saldo de forma fácil y rápida.',
     img: 'https://via.placeholder.com/150?text=Recargas',
-    ruta: '/recargas'
+    ruta: '/pago-sucursal'
   },
   {
     titulo: 'solicitudes',
-    descripcion: 'Realiza solicitudes y gestiona tus servicios.',
+    descripcion: 'Realiza solicitudes y gestiona tus servicios.(Mantenimieneto)',
     img: 'https://via.placeholder.com/150?text=Solicitudes',
-    ruta: '/solicitudes'
+    ruta: '/Solicitudes'
   },
   {
     titulo: 'Renovaciones',
-    descripcion: 'Renueva tu servicio de forma sencilla.',
+    descripcion: 'Renueva tu servicio de forma sencilla.()',
     img: 'https://via.placeholder.com/150?text=Renovaciones',
-    ruta: '/renovaciones'
+    ruta: '/Renovaciones'
   }
 ]
 

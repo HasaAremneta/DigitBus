@@ -9,8 +9,10 @@ import AgregarTarjeta from '../views/AgregarTarjeta.vue'
 import AjustesPerfil from '../views/AjustesPerfil.vue'
 import Registro from '../views/Registro.vue'
 import Recuperacion from '../views/Recuperacion.vue'
-
-import PagoSucursal from '../views/PagoSucursal.vue';
+import Solicitudes from '../views/Solicitudes.vue'
+import Renovaciones from '../views/Renovaciones.vue'
+import PagoSucursal from '../views/PagoSucursal.vue'
+import Conocenos from '../views/Conocenos.vue'
 
 
 
@@ -24,6 +26,9 @@ const routes = [
   { path: '/pago-sucursal', component: PagoSucursal },
   {path: '/registro', component: Registro },
   {path: '/recuperacion', component: Recuperacion },
+  {path: '/Solicitudes', component: Solicitudes},
+  {path: '/Renovaciones', component: Renovaciones},
+  {path: '/Conocenos', component: Conocenos}
 ]
 
 const router = createRouter({

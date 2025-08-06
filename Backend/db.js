@@ -5,8 +5,8 @@ const sql = require('mssql');
 const config = {
     user: 'sa',
     password: 'Hassael24.',
-    server: 'DESKTOP-3HJ2A4F', 
-    database: 'DigitBus2',
+    server: 'LAPTOP-URJHI7O9', 
+    database: 'DigitBus',
     port: 1433, // Default port for SQL Server
     options: {
         encrypt: false, 
