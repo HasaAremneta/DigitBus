@@ -6,7 +6,7 @@ const config = {
     user: 'sa',
     password: 'Hassael24.',
     server: 'LAPTOP-URJHI7O9', 
-    database: 'DigitBus',
+    database: 'DigitBusProd',
     port: 1433, // Default port for SQL Server
     options: {
         encrypt: false, 

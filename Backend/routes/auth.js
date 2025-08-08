@@ -17,7 +17,7 @@ router.post('/login', async (req, res) => {
             .input('NombreUsuario', sql.NVarChar, NombreUsuario)
             .query(`
                 SELECT 
-                    u.IDUSUARIO, 
+                    u.IDUSUARIOS, 
                     u.PASSWORD AS passwordHash, 
                     p.IDPERSONAL, 
                     p.NOMBRE 

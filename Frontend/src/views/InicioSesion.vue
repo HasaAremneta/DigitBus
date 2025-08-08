@@ -98,15 +98,6 @@ async function handleLogin(){
     showCustomModal('Error de Inicio de Sesión', 'Usuario o contraseña incorrectos, vuelva a intentar.');
   }
 }
-// function handleLogin() {
-//   if (username.value === 'José Carlos Camarena Hernández' && password.value === 'xxxxxxxxx') {
-//     showPasswordError.value = false
-//     showCustomModal('Inicio de Sesión Exitoso', '¡Bienvenido de nuevo!')
-//   } else {
-//     showPasswordError.value = true
-//     showCustomModal('Error de Inicio de Sesión', 'Usuario o contraseña incorrectos, vuelva a intentar.')
-//   }
-// }
 function showCustomModal(title, message) {
   modalTitle.value = title
   modalMessage.value = message

@@ -27,14 +27,14 @@ router.post('/registro', async (req, res) => {
         // Verificar si el nombre de usuario ya existe
         const usuarioExistente = await pool.request()
             .input('NombreUsuario', sql.VarChar, NombreUsuario)
-            .query('SELECT 1 FROM USUARIOS WHERE NOMBREUSUARIO = @nombreUsuario');
+            .query('SELECT 1 FROM USUARIOS WHERE NOMBREUSUARIO = @NombreUsuario');
 
         if (usuarioExistente.recordset.length > 0) {
             return res.status(400).json({ error: 'El nombre de usuario ya está en uso' });
         }
 
         // Insertar en PERSONAL
-        await pool.request()
+            await pool.request()
         .input('nombreUsuario', sql.VarChar, NombreUsuario)
         .input('nombre', sql.VarChar, Nombre)
         .input('apellidoPaterno', sql.VarChar, ApellidoPaterno)
@@ -45,7 +45,7 @@ router.post('/registro', async (req, res) => {
                 VALUES (@nombreUsuario, @nombre, @apellidoPaterno, @apellidoMaterno, @fechaNacimiento, @correo)`);
 
         // Insertar en USUARIOS
-        await pool.request()
+    await pool.request()
         .input('nombreUsuario', sql.VarChar, NombreUsuario)
         .input('password', sql.VarChar, hashedPassword)
         .query(`INSERT INTO USUARIOS (NOMBREUSUARIO, PASSWORD) VALUES (@nombreUsuario, @password)`);
