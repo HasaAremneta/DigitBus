@@ -14,6 +14,7 @@ import Renovaciones from '../views/Renovaciones.vue'
 import PagoSucursal from '../views/PagoSucursal.vue'
 import Conocenos from '../views/Conocenos.vue'
 import PaymentMenu from '../views/PaymentMenu.vue'
+import PaymentSuccess from '../views/PaymentSuccess.vue'
 
 
 
@@ -30,7 +31,8 @@ const routes = [
   {path: '/Solicitudes', component: Solicitudes},
   {path: '/Renovaciones', component: Renovaciones},
   {path: '/Conocenos', component: Conocenos},
-  {path: '/PaymentMenu', component: PaymentMenu}
+  {path: '/PaymentMenu', component: PaymentMenu},
+  {path: '/PaymentSuccess', component: PaymentSuccess}
 ]
 
 const router = createRouter({

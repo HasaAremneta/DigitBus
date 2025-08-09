@@ -85,7 +85,7 @@
               
               <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary" :disabled="loading">
-                  {{ loading ? 'Creando cuenta...' : 'Crear cuenta' }} <i :class="loading ? 'pi pi-spinner pi-spin' : 'pi pi-user-plus'"></i>
+                  {{ loading ? 'Creando cuenta...' : 'Crear cuenta' }} <i :class="loading ? 'pi pi-spin pi-spinner' : 'pi pi-user-plus'"></i>
 
                 </button>
               </div>
@@ -115,6 +115,11 @@
 import { ref } from 'vue'
 import { registroUsuario } from '@/Services/registro'
 import { useRouter } from 'vue-router'
+
+const showError = ref(false);
+const aceptaTerminos = ref(false);
+const loading = ref(false);
+
 
 const router = useRouter()
 async function handleRegistro() {
