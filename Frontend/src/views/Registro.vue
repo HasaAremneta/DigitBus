@@ -2,10 +2,10 @@
   <div class="registro-page">
     <header class="top-nav">
       <div class="logo-container">
-        <h1 class="logo-text">Alex</h1>
+        <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       </div>
       <nav>
-        <router-link to="/login">Iniciar sesión</router-link>
+        <router-link to="/">Iniciar sesión</router-link>
         <router-link to="/registro">Registrarse</router-link>
       </nav>
     </header>
@@ -15,7 +15,7 @@
         <div class="col-lg-6 col-md-8">
           <div class="card registro-card">
             <h2 class="text-center">Crear cuenta</h2>
-            <p class="subtitle text-center">Únete a Alex y comienza tu experiencia</p>
+            <p class="subtitle text-center">Únete a DigitBus y comienza tu experiencia</p>
             
             <form @submit.prevent="handleRegistro">
               <div class="mb-3">
@@ -85,13 +85,14 @@
               
               <div class="d-grid gap-2">
                 <button type="submit" class="btn btn-primary" :disabled="loading">
-                  {{ loading ? 'Creando cuenta...' : 'Crear cuenta' }}
+                  {{ loading ? 'Creando cuenta...' : 'Crear cuenta' }} <i :class="loading ? 'pi pi-spinner pi-spin' : 'pi pi-user-plus'"></i>
+
                 </button>
               </div>
               
               <p class="login-link text-center">
                 ¿Ya tienes una cuenta? 
-                <router-link to="/login" class="link-login">Inicia sesión</router-link>
+                <router-link to="/" class="link-login">Inicia sesión</router-link>
               </p>
             </form>
           </div>
@@ -241,9 +242,11 @@ async function handleRegistro() {
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
 
 .registro-page {
-  background-color: #f8f9fa;
-  min-height: 100vh;
+  background-image: url('../src/img/fondoLogin.png');
+  background-size: 100%;
+  min-height: 100%;
   font-family: 'Inter', sans-serif;
+ 
 }
 
 .top-nav {
@@ -278,6 +281,10 @@ async function handleRegistro() {
 .container-main {
   margin-top: 3rem;
   margin-bottom: 3rem;
+}
+
+.logo {
+  height: 32px;
 }
 
 .registro-card {
@@ -370,7 +377,8 @@ async function handleRegistro() {
 .btn-primary:hover {
   background-color: #45a832;
   border-color: #45a832;
-  transform: translateY(-1px);
+  transform: scale(1.06);
+  transition: 0.4s;
 }
 
 .btn-primary:disabled {

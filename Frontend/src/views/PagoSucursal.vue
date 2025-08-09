@@ -15,63 +15,32 @@
         <!-- TARJETA -->
         <div class="tarjeta box">
           <h2>Tarjeta</h2>
-          <p>Selecciona el método de pago</p>
-          <div class="btn-group">
-          <button
-            :class="['btn-opcion', { active: metodoPago === 'debito' }]"
-            @click="seleccionarMetodo('debito')"
-          >
-            Débito
-          </button>
-          <button
-            :class="['btn-opcion', { active: metodoPago === 'credito' }]"
-            @click="seleccionarMetodo('credito')"
-          >
-            Crédito
-          </button>
-        </div>
+          <p>Cuanto saldo deseas recargar?</p>
 
-          <label>Nombre del propietario</label>
-          <input type="text" placeholder="José Carlos Camarena Hernández" v-model="nombre" />
 
-          <label>Número de tarjeta</label>
-          <input type="text" placeholder="**** **** **** ****" v-model="tarjeta" />
+          <label class="lbl-monto">Monto ($mxn.):</label>
+          <input class="inpt-monto" type="number" placeholder="0.00" v-model="monto" min="0" />
+          <label style="margin-right: 5px;">Número de tarjeta: </label>
+          <!-- <input type="text" placeholder="**** **** **** ****" v-model="tarjeta" /> -->
+          <select name="" id="" v-model="tarjeta">
+            <option value="" default>Selecciona tu tarjeta</option>
+            <option v-for="item in tarjetas" :key="item.numTarjeta" :value="item.idTarjeta">
+              {{ item.numTarjeta }} ({{ item.tipotarjeta }})
+            </option>
+          </select>
 
-          <div class="input-flex">
-            <div>
-              <label>Expiración</label>
-              <input class="short-input" type="text" placeholder="MM/AA" v-model="expiracion" />
-            </div>
-            <div>
-              <label>CVV</label>
-              <input class="short-input" type="text" placeholder="000" v-model="cvv" />
-            </div>
-          </div>
 
-          <button
-            class="btn-pagar"
-            @click="formularioValido ? enviarPago() : null"
-          >
-            Pagar
+
+
+          <button class="btn-pagar" @click="formularioValido ? enviarPago() : null">
+            Proceder al pago <i class="pi pi-receipt" style="margin-left: 2%;"></i>
           </button>
 
 
 
-          <p class="nota">Usamos tus datos de forma responsable y privada.</p>
+
         </div>
 
-        <!-- TRANSFERENCIA -->
-        <div class="transferencia box">
-          <h2>Transferencia</h2>
-          <p><strong>Detalles para la <span class="azul">transferencia</span></strong></p>
-          <p>Realiza tu transferencia a:</p>
-          <p><strong>Banco:</strong> Asumaquina</p>
-          <p><strong>Cuenta:</strong> 1234567890</p>
-          <p><strong>CLABE:</strong> 012345678901234567</p>
-
-          <p class="copy-qr">También puedes escanear este código QR para hacer el pago directo.</p>
-          <img src="@/assets/img/qr-fake.png" alt="QR de pago" class="qr-img" />
-        </div>
 
         <!-- EXTRAS -->
         <div class="extra">
@@ -80,9 +49,9 @@
           <div class="guia">
             <h3>Guía <span class="azul">rápida</span></h3>
             <ol>
-              <li><strong>Selecciona</strong> el medio de pago.</li>
-              <li><strong>Ingresa los datos</strong> requeridos.</li>
-              <li><strong>Pulsa</strong> el botón pagar.</li>
+              <li><strong>Ingresa</strong> monto que deseas recargar a tu tarjeta.</li>
+              <li><strong>selecciona</strong> la tarjeta que vas a recargar.</li>
+              <li><strong>Pulsa</strong> el botón para proceder al pago.</li>
             </ol>
           </div>
         </div>
@@ -93,20 +62,59 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import 'primeicons/primeicons.css'
+import axios from 'axios'
 
-const metodoPago = ref('debito')
-const nombre = ref('')
+
+const monto = ref('')
 const tarjeta = ref('')
-const expiracion = ref('')
-const cvv = ref('')
+const tarjetas = ref([
+  { idTarjeta: 1, numTarjeta: '*******1234', tipotarjeta: 'Estudiante' },
+  { idTarjeta: 2, numTarjeta: '*******5678', tipotarjeta: 'General' },
+  { idTarjeta: 3, numTarjeta: '*******9012', tipotarjeta: 'Tercera Edad' },
+])
 
 const formularioValido = computed(() => {
-  return nombre.value && tarjeta.value && expiracion.value && cvv.value
+
+  return monto.value && tarjeta.value
+
 })
 
-const seleccionarMetodo = (metodo) => {
-  metodoPago.value = metodo
+const enviarPago = () => {
+  if (formularioValido.value) {
+    // Lógica para enviar el pago
+
+    axios.post('http://localhost:3000/api/payment/create-checkout-session', {
+      monto: monto.value * 100,
+      tarjeta: tarjeta.value,
+    },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(response => {
+        console.log('Redirigiendo al pago:', response.data)
+        window.location.href = response.data.url;
+
+      }).catch(error => {
+        console.error('Error al enviar el pago:', error);
+        var msg = 'verifique los datos del formulario';
+        if (monto.value < 10) {
+          msg += ': El monto debe ser mayor a $10';
+        }
+        alert(msg)
+      });
+  } else {
+    var msg = 'verifique los datos del formulario';
+    if (monto.value < 10) {
+      msg += ': El monto debe ser mayor a $10';
+    }
+    alert(msg)
+    console.log('Formulario inválido')
+  }
 }
+
 </script>
 
 
@@ -224,10 +232,32 @@ input {
   background-color: #1548d6;
 }
 
+.lbl-monto {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  font-size: x-large;
+}
+
+.inpt-monto {
+  width: 100%;
+  padding: 0.6rem;
+  border: none;
+  border-bottom: solid #ccc;
+  border-radius: 6px;
+  background-color: var(--blanco);
+  font-size: 2.95rem;
+  margin-bottom: 1rem;
+}
+
+.inpt-monto:focus {
+  outline: none;
+  border-color: var(--azul);
+}
+
 .btn-pagar {
   background-color: #0c7b2f !important;
   color: white;
-  
+
   width: 100%;
   padding: 0.75rem;
   font-weight: bold;
@@ -239,6 +269,11 @@ input {
   box-shadow: 0 4px 0 #0c7b2f;
   text-align: center;
   font-size: 1rem;
+}
+
+.btn-pagar:hover {
+  transform: scale(1.05);
+  background-color: #23cd58;
 }
 
 .btn-pagar:active {
@@ -254,24 +289,7 @@ input {
   transform: none;
 }
 
-.nota {
-  font-size: 0.75rem;
-  margin-top: 0.5rem;
-  color: var(--azul-marino);
-}
 
-.copy-qr {
-  font-size: 0.9rem;
-  margin: 0.5rem 0;
-  color: var(--azul-marino);
-}
-
-.qr-img {
-  width: 180px;
-  height: auto;
-  border-radius: 10px;
-  margin-top: 0.5rem;
-}
 
 .extra {
   flex: 1;

@@ -4,9 +4,9 @@
     <header class="top-nav">
       <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       <nav class="nav-links">
-        <router-link to="/Conocenos">Conócenos</router-link>
+        <router-link to="/Conocenos" ><button class="btn-menu">Conócenos</button></router-link>
         <!--Boton de salida de sesion-->
-        <a href="#" @click.prevent="confirmarSalida">Salir</a>
+        <a href="#" @click.prevent="confirmarSalida" ><button class="btn-menu">Salir</button></a>
         <!-- <router-link to="/login">Salir</router-link> -->
       </nav>
     </header>
@@ -14,12 +14,12 @@
     <!-- Banner principal -->
     <section class="banner">
       <div class="banner-text">
-        <h2>Ya ha llegado<br />el mejor método<br />de pago a León</h2>
+        <h2>Ya ha llegado!!</h2><h2 style="text-align: center;">el mejor método</h2><h2 style="float: right;">de pago a León</h2>
       </div>
-      <div class="banner-video">
+      <!-- <div class="banner-video">
         <img src="https://via.placeholder.com/300x200?text=Video" alt="¿Qué es DigitBus?" class="video-thumb" />
         <button class="play-button">▶</button>
-      </div>
+      </div> -->
     </section>
 
     <!-- Accesos rápidos -->
@@ -30,7 +30,8 @@
         :key="item.titulo"
         @click="irARuta(item.ruta)"
       >
-        <img :src="item.img" :alt="item.titulo" class="feature-img" />
+        <!-- <img :src="item.img" :alt="item.titulo" class="feature-img" /> -->
+         <i :class="item.icon" style="font-size: 2.5rem; padding: 15px;"></i>
         <h3>{{ item.titulo }}</h3>
         <p>{{ item.descripcion }}</p>
       </div>
@@ -39,6 +40,9 @@
 </template>
 
 <script setup>
+
+import 'primeicons/primeicons.css'
+
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
@@ -52,25 +56,25 @@ const accesos = [
   {
     titulo: 'Historial de pagos',
     descripcion: 'Consulta tu historial de pagos y transacciones.',
-    img: 'https://via.placeholder.com/150?text=Historial+Pagos',
+    icon: 'pi pi-history',
     ruta: '/historial'
   },
   {
     titulo: 'recargas',
     descripcion: 'Recarga tu saldo de forma fácil y rápida.',
-    img: 'https://via.placeholder.com/150?text=Recargas',
+    icon: 'pi pi-credit-card',
     ruta: '/pago-sucursal'
   },
   {
     titulo: 'solicitudes',
     descripcion: 'Realiza solicitudes y gestiona tus servicios.(Mantenimieneto)',
-    img: 'https://via.placeholder.com/150?text=Solicitudes',
+    icon: 'pi pi-file-plus',
     ruta: '/Solicitudes'
   },
   {
     titulo: 'Renovaciones',
     descripcion: 'Renueva tu servicio de forma sencilla.()',
-    img: 'https://via.placeholder.com/150?text=Renovaciones',
+    icon: 'pi pi-file-arrow-up',
     ruta: '/Renovaciones'
   }
 ]
@@ -107,6 +111,28 @@ const confirmarSalida = () => {
   font-weight: bold;
 }
 
+.btn-menu {
+  background-color: #ffffff;
+  color: #2b63f3;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  text-decoration: none;
+  transition: 0.5s;
+}
+
+
+.btn-menu:hover {
+  background-color: #2b63f3;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  text-decoration: none;
+  transition: 0.5s;
+}
+
+
 /* Banner */
 .banner {
   display: flex;
@@ -116,11 +142,22 @@ const confirmarSalida = () => {
   background-color: #111;
   color: white;
   flex-wrap: wrap;
+  background-image: url('../src/img/fondo1.jpg');
+  background-repeat: no-repeat;
+  background-size: auto;
+  backdrop-filter: blur(2px);
 }
 
 .banner-text h2 {
-  font-size: 2rem;
-  line-height: 1.5;
+  font-size: 2.4rem;
+  line-height: 1;
+  text-shadow: black 3px 3px 5px;
+  
+}
+
+.banner-text {
+  width: 100%;
+  backdrop-filter: blur(3px);
 }
 
 .banner-video {
@@ -150,24 +187,26 @@ const confirmarSalida = () => {
 /* Features */
 .features {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   flex-wrap: wrap;
-  padding: 2rem;
+  margin-top: 1rem;
 }
 
 .feature-card {
   background-color: #001f3f;
   color: white;
   border-radius: 12px;
-  width: 200px;
-  margin: 1rem;
+  width: 23%;
   padding: 1rem;
   text-align: center;
-  transition: transform 0.3s;
+  transition: 0.5s;
 }
 
 .feature-card:hover {
-  transform: scale(1.05);
+  transform: scale(1.1);
+  cursor: pointer;
+  transition: 0.5s;
+  background-color: #023f7b;
 }
 
 .feature-img {

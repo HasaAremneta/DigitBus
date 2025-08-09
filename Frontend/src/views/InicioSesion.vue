@@ -27,7 +27,7 @@
               </div>
             </div>
             <div class="d-grid gap-2">
-              <button type="submit" class="btn btn-primary">Entrar</button>
+              <button type="submit" class="btn btn-primary">Entrar <i class="pi pi-unlock" style="font-size: 1rem;"></i></button>
             </div>
             <router-link to="/recuperacion" class="forgot-password-link text-center">¿Olvidaste tu contraseña?</router-link>
             <p class="privacy-notice text-center">Aviso de privacidad</p>
@@ -39,10 +39,10 @@
       <div class="col-lg-5 col-md-6">
         <div class="card info-card-dark mb-4">
           <h3>¿No tienes una cuenta?</h3>
-          <router-link to="/registro" class="btn btn-secondary">Crear cuenta</router-link>
+          <router-link to="/registro" class="btn btn-secondary">Crear cuenta <i class="pi pi-user-plus"></i></router-link>
         </div>
         <div class="card info-card-blue">
-          <h3>¿Ya conoces los</h3>
+          <h2>¿Ya conoces los</h2>
           <div class="digitbeneficios-text">DigitBeneficios?</div>
           <button class="btn btn-info">¡Quiero conocerlos!</button>
         </div>
@@ -66,6 +66,7 @@
 import { ref } from 'vue'
 import { login } from '../Services/auth.js' // Asegúrate de que la ruta sea correcta
 import { useRouter } from 'vue-router'
+import 'primeicons/primeicons.css'
 
 const username = ref('')
 const password = ref('')
@@ -120,11 +121,19 @@ function closeCustomModal() {
 
 <style scoped>
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
+body{
+  
+}
 .inicio-sesion-page {
-  background-color: #f8f9fa;
+  /* background-color: #2773c0; */
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
+  background-image: url('../src/img/fondoLogin.png');
+  background-repeat: no-repeat;
+  background-size: 100%;
+  position: relative;
 }
+
 .top-nav {
   display: flex;
   justify-content: space-between;
@@ -191,11 +200,30 @@ function closeCustomModal() {
   padding: 0.75rem 2rem;
   border-radius: 0.5rem;
   font-weight: bold;
-  transition: background-color 0.3s ease;
+  transition:  0.3s ease;
 }
 .btn-primary:hover {
   background-color: #218838;
   border-color: #1e7e34;
+  transform: scale(1.06);
+  transition: 0.4s;
+}
+
+.btn-primary:hover i {
+  transform: rotate(15deg);
+}
+
+@keyframes shake {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-15deg); }
+  40% { transform: rotate(15deg); }
+  60% { transform: rotate(-10deg); }
+  80% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.btn-primary:hover i {
+  animation: shake 0.6s ease;
 }
 .forgot-password-link {
   display: block;
@@ -230,12 +258,19 @@ function closeCustomModal() {
   border-radius: 0.5rem;
   font-weight: bold;
   color: #ffffff;
-  transition: background-color 0.3s ease;
+  transition: 0.3s ease;
 }
 .info-card-dark .btn-secondary:hover {
   background-color: #218838;
   border-color: #1e7e34;
+  transform: scale(1.06);
+  transition: 0.4s;
 }
+
+.info-card-dark .btn-secondary:hover i {
+  transform: scale(1.2);
+}
+
 .info-card-blue {
   background-color: #007bff;
   color: #ffffff;
@@ -253,17 +288,18 @@ function closeCustomModal() {
   border-radius: 0.5rem;
   font-weight: bold;
   color: #ffffff;
-  transition: background-color 0.3s ease;
+  transition: 0.3s ease;
 }
 .info-card-blue .btn-info:hover {
   background-color: #004085;
   border-color: #00306c;
+  transform: scale(1.06);
+  transition: 0.4s;
 }
 .digitbeneficios-text {
   font-size: 2.5rem;
   font-weight: 800;
-  margin-top: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 .custom-modal-overlay {
   position: fixed;

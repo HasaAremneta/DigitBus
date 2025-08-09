@@ -3,9 +3,14 @@ const router = express.Router();
 const sql = require('mssql');
 const { connectToDB } = require('../db');
 const authenticateToken = require('../middlewares/authMiddleware');
+const Stripe = require('stripe');
+const API_KEY = process.env.API_KEY;
+
+
+const stripe = new Stripe(API_KEY);
 
 // Obtener historial completo (recargas, renovaciones, solicitudes)
-router.get('/', authenticateToken, async (req, res) => {
+/*router.get('/', authenticateToken, async (req, res) => {
     const idUsuario = req.usuario.idUsuario;// Obtener ID de usuario del token
     try {
         const pool = await connectToDB();
@@ -53,7 +58,20 @@ router.get('/', authenticateToken, async (req, res) => {
             details: err.message 
         });
     }
+});*/
+
+router.get('/', async (req, res) => {
+    const sessions = await stripe.checkout.sessions.list({
+        limit: 3,
+        customer_details: {
+            email: 'mariogt367@gmail.com',
+            //name: 'Mario Zuñiga'
+        },
+    });
+    res.json(sessions);
 });
+
+
 
 // Obtener historial por ID de tarjeta
 router.get('/tarjeta/:idTarjeta', async (req, res) => {
@@ -61,7 +79,7 @@ router.get('/tarjeta/:idTarjeta', async (req, res) => {
 
     try {
         const pool = await connectToDB();
-        
+
         // Historial de recargas/renovaciones para una tarjeta específica
         const recargas = await pool.request()
             .input('idTarjeta', sql.Int, idTarjeta)
@@ -89,9 +107,9 @@ router.get('/tarjeta/:idTarjeta', async (req, res) => {
             historial: recargas.recordset
         });
     } catch (err) {
-        res.status(500).json({ 
-            error: 'Error al obtener el historial de la tarjeta', 
-            details: err.message 
+        res.status(500).json({
+            error: 'Error al obtener el historial de la tarjeta',
+            details: err.message
         });
     }
 });

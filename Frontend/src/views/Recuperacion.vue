@@ -2,7 +2,7 @@
   <div class="recuperacion-page">
     <header class="top-nav">
       <div class="logo-container">
-        <h1 class="logo-text">Alex</h1>
+        <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" style="height: 32px;"/>
       </div>
       <nav>
         <router-link to="/login">Iniciar sesión</router-link>
@@ -15,7 +15,7 @@
         <div class="col-lg-5 col-md-7">
           <div class="card recuperacion-card">
             <div class="icon-container">
-              <div class="recovery-icon">🔐</div>
+              <div class="recovery-icon"><i class="pi pi-lock" style="color: #1a6dff; font-size: larger;"></i></div>
             </div>
             
             <h2 class="text-center">Recuperar contraseña</h2>
@@ -64,7 +64,7 @@
             </div>
             
             <div class="back-to-login">
-              <router-link to="/login" class="back-link">
+              <router-link to="/" class="back-link">
                 ← Volver al inicio de sesión
               </router-link>
             </div>

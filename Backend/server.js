@@ -15,6 +15,7 @@ const renovacionRoutes = require('./routes/renovaciones')
 const historialRoutes = require('./routes/historial');
 const SolicitudesRoutes = require('./routes/solicitudes');
 const RecargasRoutes = require('./routes/recargas');
+const PaymentRoutes = require('./routes/payment');
 
 //Enrutamiento 
 app.use('/api/auth', authRoutes);
@@ -24,6 +25,7 @@ app.use('/api/renovaciones', renovacionRoutes);
 app.use('/api/historial', historialRoutes);
 app.use('/api/solicitudes', SolicitudesRoutes);
 app.use('/api/recargas', RecargasRoutes);
+app.use('/api/payment', PaymentRoutes);
 
 //Inicalizacion del servidor
 const PORT = 3000;
