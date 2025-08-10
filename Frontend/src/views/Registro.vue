@@ -432,4 +432,23 @@ async function handleRegistro() {
 .custom-modal-content button:hover {
   background-color: #0056b3;
 }
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+  height: 32px;
+}
+
+.top-nav nav a {
+  margin-left: 1.5rem;
+  text-decoration: none;
+  color: #2a3547;
+  font-weight: 500;
+}
 </style>

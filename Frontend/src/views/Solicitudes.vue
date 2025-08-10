@@ -1,8 +1,17 @@
 <template>
   <div class="solicitud-tarjeta">
+    <header class="top-nav">
+      <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
+      <nav>
+        <router-link to="/home">Inicio</router-link>
+        <router-link to="/historial">Historial</router-link>
+        <router-link to="/Solicitudes">Solicitar</router-link>
+        <router-link to="/Renovaciones">Renovar o Extravio</router-link>
+        <router-link to="/Conocenos">Conócenos</router-link>
+      </nav>
+    </header>
     <!-- Columna izquierda: selección -->
     <div class="columna-izquierda">
-      <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       <h2>Trámite de <strong>solicitud</strong></h2>
       <p>Selecciona el tipo de beneficio que deseas <strong>solicitar</strong></p>
       <select v-model="tipoSeleccionado">
@@ -10,7 +19,7 @@
         <option value="estudiante">Estudiantes</option>
         <option value="tercera">Personas de la tercera edad</option>
         <option value="discapacidad">Personas con discapacidad</option>
-        <!-- <option value="general">General</option> -->
+        <option value="general">General</option>
       </select>
     </div>
 
@@ -38,11 +47,11 @@
       </template>
       
       <!-- Solo mostrar el cuadro para subir el voucher si es tipo 'general' -->
-      <!-- <template v-if="tipoSeleccionado === 'general'">
+      <template v-if="tipoSeleccionado === 'general'">
         <label>Voucher:</label>
-        <input type="file" @change="subirArchivo($event, 'vaucher')" />
+        <input type="file" @change="subirArchivo($event, 'identificación')" />
         <small>Sube el voucher de pago del Pagobus.</small>
-      </template> -->
+      </template>
 
       <!-- Solo mostrar Identificación oficial y Foto cuando no sea 'general' -->
       <template v-if="tipoSeleccionado !== 'general'">
@@ -138,7 +147,8 @@ const convertirABase64 = (file) => {
 
 const tipoBackend = (tipo) => {
   if (tipo === 'estudiante') return 'ESTUDIANTE'
-  if (tipo === 'tercera'|| tipo === 'discapacidad') return 'GENERALMAYOR'
+  if (tipo === 'tercera') return 'TERCERA_EDAD'
+  if (tipo === 'discapacidad') return 'DISCAPACIDAD'
   if (tipo === 'general') return 'GENERAL'
   return ''
 }

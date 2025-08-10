@@ -85,6 +85,8 @@ async function handleLogin(){
 
     localStorage.setItem('token', token);
     localStorage.setItem('username', username.value);
+    localStorage.setItem('email', response.data.user.CORREO);
+    localStorage.setItem('idPersonal', response.data.user.IDPERSONAL);
 
     showPasswordError.value = false;
     showCustomModal('Inicio de Sesión Exitoso', '¡Bienvenido de nuevo!');
@@ -112,9 +114,7 @@ function closeCustomModal() {
 
 <style scoped>
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
-body{
-  
-}
+
 .inicio-sesion-page {
   /* background-color: #2773c0; */
   min-height: 100vh;

@@ -82,6 +82,9 @@ const accesos = [
     titulo: 'Renovaciones',
     descripcion: 'Renueva tu servicio de forma sencilla.()',
     icon: 'pi pi-file-arrow-up',
+    titulo: 'Renovaciones y extravíos',
+    descripcion: 'Renueva tu servicio de forma sencilla o reporta extravíos.',
+    img: 'https://via.placeholder.com/150?text=Renovaciones',
     ruta: '/Renovaciones'
   }
 ]

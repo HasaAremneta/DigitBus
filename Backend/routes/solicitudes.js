@@ -5,39 +5,40 @@ const authenticateToken = require('../middlewares/authMiddleware');
 
 router.post('/crear', authenticateToken, async (req, res) => {
   const { tipo, observaciones, documentos } = req.body;
-  const idUsuario = req.usuario.idUsuario;
+  const idPersonal = req.usuario.idPersonal;
 
-  if (!idUsuario) {
+  if (!idPersonal) {
     return res.status(400).json({ success: false, message: 'idUsuario no encontrado en el token' });
   }
 
   try {
     const pool = await connectToDB();
 
-    // Consulta para obtener el idPersonal usando el idUsuario
+    // Solo para obtener el ID del personal no es necesario el de usuario pero ya funcionaba y no le quise mover
     const result = await pool.request()
-      .input('idUsuario', sql.Int, idUsuario)
+      .input('idPersonal', sql.Int, idPersonal)
       .query(`
         SELECT p.IDPERSONAL 
         FROM PERSONAL p
         JOIN USUARIOS u ON u.NOMBREUSUARIO = p.NOMBREUSUARIO
-        WHERE u.IDUSUARIO = @idUsuario
+        WHERE p.IDPERSONAL = @idPersonal
       `);
 
     if (result.recordset.length === 0) {
-      return res.status(400).json({ success: false, message: 'Usuario no encontrado o no asociado a personal.' });
+      return res.status(400).json({ success: false, message: 'Personal no encontrado' });
     }
-
-    const idPersonal = result.recordset[0].IDPERSONAL;
 
     // Crear la solicitud
     const solicitudResult = await pool.request()
       .input('idPersonal', sql.Int, idPersonal)
       .input('tipoTablet', sql.VarChar(20), tipo)
+      .input('fechaSolicitud', sql.DateTime, new Date())
+      .input('status', sql.VarChar(20), 'Pendiente')
+      .input('tipoSolicitud', sql.VarChar(20), 'Nueva')
       .query(`
-        INSERT INTO SOLICITUDES (IDPERSONAL, TIPOTABLETA)
+        INSERT INTO SOLICITUDES (IDPERSONAL, TIPOTABLETA,FECHASOLICITUD, STATUS, TIPOSOLICITUD)
         OUTPUT INSERTED.IDSOLICITUD
-        VALUES (@idPersonal, @tipoTablet)
+        VALUES (@idPersonal, @tipoTablet, @fechaSolicitud, @status, @tipoSolicitud)
       `);
 
     const idSolicitud = solicitudResult.recordset[0].IDSOLICITUD;

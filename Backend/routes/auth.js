@@ -50,7 +50,7 @@ router.post('/login', async (req, res) => {
             { expiresIn: '1h' }
         );
 
-        res.json({ message: 'Inicio de sesión exitoso', token });
+        res.json({ message: 'Inicio de sesión exitoso', token, user });
 
     } catch (err) {
         console.error('Error al iniciar sesión:', err);

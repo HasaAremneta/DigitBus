@@ -15,6 +15,7 @@ import PagoSucursal from '../views/PagoSucursal.vue'
 import Conocenos from '../views/Conocenos.vue'
 import PaymentMenu from '../views/PaymentMenu.vue'
 import PaymentSuccess from '../views/PaymentSuccess.vue'
+import ConocenosInisio from '../views/ConocenosInisio.vue'
 
 
 
@@ -32,7 +33,8 @@ const routes = [
   {path: '/Renovaciones', component: Renovaciones},
   {path: '/Conocenos', component: Conocenos},
   {path: '/PaymentMenu', component: PaymentMenu},
-  {path: '/PaymentSuccess', component: PaymentSuccess}
+  {path: '/PaymentSuccess', component: PaymentSuccess},
+  {path: '/ConocenosInisio', component: ConocenosInisio }
 ]
 
 const router = createRouter({
