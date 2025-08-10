@@ -66,9 +66,9 @@
                 >
               </div>
 
-              <div v-if="showError" class="error-message mb-3">
+              <!-- <div v-if="showError" class="error-message mb-3">
                 {{ errorMessage }}
-              </div>
+              </div> -->
 
               <div class="mb-3 form-check">
                 <input 
@@ -116,18 +116,43 @@ import { ref } from 'vue'
 import { registroUsuario } from '@/Services/registro'
 import { useRouter } from 'vue-router'
 
-const showError = ref(false);
-const aceptaTerminos = ref(false);
-const loading = ref(false);
-
 
 const router = useRouter()
+
+// Variables del formulario
+const nombre = ref('')
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const aceptaTerminos = ref(false)
+
+// Estados
+const loading = ref(false)
+const showError = ref(false)
+const errorMessage = ref('')
+
+// Modal
+const showModal = ref(false)
+const modalTitle = ref('')
+const modalMessage = ref('')
+
+// Funciones modal
+function showCustomModal(title, message) {
+  modalTitle.value = title
+  modalMessage.value = message
+  showModal.value = true
+}
+
+function closeModal() {
+  showModal.value = false
+}
+
+// Función principal de registro
 async function handleRegistro() {
   showError.value = false
 
   // Validaciones
-  if (!nombre.value || !email.value || !password.value || !confirmPassword.value)
-  {
+  if (!nombre.value || !email.value || !password.value || !confirmPassword.value) {
     showError.value = true
     errorMessage.value = 'Por favor, complete todos los campos.'
     return
@@ -147,24 +172,28 @@ async function handleRegistro() {
     errorMessage.value = 'Debe aceptar los términos y condiciones.'
     return
   }
+
   loading.value = true
 
-  try{
+  try {
     const response = await registroUsuario({
       NombreUsuario: nombre.value,
-      Nombre: nombre.value.split(' ')[0], // Opcional, adapta según tus campos
-      ApellidoPaterno: 'ApellidoP', // Aquí deberías agregar inputs para apellido si quieres guardar real
+      Nombre: nombre.value.split(' ')[0],
+      ApellidoPaterno: 'ApellidoP', // Cambia si tienes input real
       ApellidoMaterno: 'ApellidoM',
-      DiaNacimiento: '01', // Igual agrega inputs para fecha o usa calendario
+      DiaNacimiento: '01',
       MesNacimiento: '01',
       AnoNacimiento: '2000',
       Correo: email.value,
       password: password.value,
-    });
+    })
 
     loading.value = false
 
-     showCustomModal('Cuenta Creada', response.data.message || '¡Tu cuenta ha sido creada exitosamente! Ya puedes iniciar sesión.');
+    showCustomModal(
+      'Cuenta Creada',
+      response.data.message || '¡Tu cuenta ha sido creada exitosamente! Ya puedes iniciar sesión.'
+    )
 
     // Limpiar formulario
     nombre.value = ''
@@ -172,75 +201,21 @@ async function handleRegistro() {
     password.value = ''
     confirmPassword.value = ''
     aceptaTerminos.value = false
-    setTimeout(() => {
-      router.push('/login'); // Redirigir a la página de inicio de sesión
-    }, 1500); // Esperar 1.5 segundos antes de redirigir
 
-  }catch (error) {
+    setTimeout(() => {
+      router.push('/')
+    }, 1500)
+  } catch (error) {
     loading.value = false
     showError.value = true
-
+      console.log(error);
     if (error.response && error.response.data && error.response.data.error) {
-        errorMessage.value = error.response.data.error;
-    }else {
-      errorMessage.value = 'Error al registrar usuario. Intenta de nuevo.';
+      errorMessage.value = error.response.data.error
+    } else {
+      errorMessage.value = 'Error al registrar usuario. Intenta de nuevo.'
     }
   }
 }
-
-// function handleRegistro() {
-//   showError.value = false
-
-//   // Validaciones
-//   if (!nombre.value || !email.value || !password.value || !confirmPassword.value) {
-//     showError.value = true
-//     errorMessage.value = 'Por favor, complete todos los campos.'
-//     return
-//   }
-
-//   if (password.value.length < 8) {
-//     showError.value = true
-//     errorMessage.value = 'La contraseña debe tener al menos 8 caracteres.'
-//     return
-//   }
-
-//   if (password.value !== confirmPassword.value) {
-//     showError.value = true
-//     errorMessage.value = 'Las contraseñas no coinciden.'
-//     return
-//   }
-
-//   if (!aceptaTerminos.value) {
-//     showError.value = true
-//     errorMessage.value = 'Debe aceptar los términos y condiciones.'
-//     return
-//   }
-
-//   loading.value = true
-
-//   // Simulación de registro
-//   setTimeout(() => {
-//     loading.value = false
-//     showCustomModal('Cuenta Creada', '¡Tu cuenta ha sido creada exitosamente! Ya puedes iniciar sesión.')
-    
-//     // Limpiar formulario
-//     nombre.value = ''
-//     email.value = ''
-//     password.value = ''
-//     confirmPassword.value = ''
-//     aceptaTerminos.value = false
-//   }, 2000)
-// }
-
-// function showCustomModal(title, message) {
-//   modalTitle.value = title
-//   modalMessage.value = message
-//   showModal.value = true
-// }
-
-// function closeModal() {
-//   showModal.value = false
-// }
 </script>
 
 <style scoped>

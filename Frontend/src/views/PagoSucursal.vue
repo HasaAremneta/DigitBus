@@ -94,7 +94,10 @@ const enviarPago = () => {
         }
       })
       .then(response => {
-        console.log('Redirigiendo al pago:', response.data)
+        console.log('Redirigiendo al pago:', response.data);
+        localStorage.setItem("idTarjeta", tarjeta.value);
+        localStorage.setItem("monto", monto.value);
+        console.log("Tarjeta: " + tarjeta + " Monto: " + monto);
         window.location.href = response.data.url;
 
       }).catch(error => {

@@ -13,6 +13,7 @@ const authenticateToken = (req, res, next) => {
     if (err) {
       return res.status(403).json({ mensaje: 'Token inválido' });
     }
+    console.log("Token decodificado:", decoded);
     req.usuario = decoded;
     next();
   });

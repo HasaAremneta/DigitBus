@@ -4,6 +4,7 @@ const sql = require('mssql');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { connectToDB } = require('../db');
+const { pool } = require('../db');
 //import Stripe from 'stripe';
 const Stripe = require('stripe');
 const API_KEY = process.env.API_KEY;
@@ -32,13 +33,51 @@ router.post('/create-checkout-session', async (req, res) => {
             }
         ],
         mode: 'payment',
-        success_url: 'http://localhost:3000/api/payment/success',
-        cancel_url: 'http://localhost:3000/api/payment/cancel',
+        success_url: 'http://localhost:5173/PaymentSuccess',
+        cancel_url: 'http://localhost:5173/pago-sucursal',
     });
 
     return res.json(session);
 });
-router.post('/success', async (req, res) => {res.send('success')});
+router.post('/success', async (req, res) => {
+    
+    const { idTarjeta, monto } = req.body;
+
+
+    const result = await pool.query`
+          INSERT INTO RECARGAS (
+            IDTARJETA,
+            IDESTABLECIMIENTO,
+            MONTO,
+            TIPOTRANSACCION,
+            STATUS,
+            FECHARECARGA
+          )
+          VALUES (
+            ${idTarjeta},
+            0,
+            ${parseFloat(monto).toFixed(2)},
+            'RECARGA',
+            'COMPLETADA',
+            GETDATE()
+          );
+          SELECT SCOPE_IDENTITY() AS idRecarga;
+        `;
+        await pool.query`
+          UPDATE TARJETAS
+          SET SALDO = ISNULL(SALDO, 0) + ${monto}
+          WHERE IDTARJETA = ${idTarjeta}
+        `;
+    
+        res.json({
+          ok: true,
+          recarga: {
+            id: result.recordset[0].idRecarga,
+            monto: parseFloat(monto),
+            fecha: new Date().toISOString(),
+          }
+        });
+});
 router.post('/cancel', async (req, res) => {res.send('cancel')});
 
 

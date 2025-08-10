@@ -4,15 +4,19 @@ const sql = require('mssql');
 // Configuración de la conexión a la base de datos
 const config = {
     user: 'sa',
-    password: 'Hassael24.',
-    server: 'LAPTOP-URJHI7O9', 
-    database: 'DigitBus',
-    port: 1433, // Default port for SQL Server
+    password: 'Gatitofeliz1$',
+    server: 'DESKTOP-81P4IMG', 
+    database: 'DIGITBUS',
+    //port: 1434, // Default port for SQL Server
     options: {
         encrypt: false, 
         trustServerCertificate: true 
     }
 };
+
+const pool = new sql.ConnectionPool(config);
+
+const poolConnect = pool.connect();
 
 async function connectToDB() {
     try {
@@ -27,4 +31,6 @@ async function connectToDB() {
 module.exports = {
     sql,
     connectToDB,
+    pool,
+    poolConnect,
 };
