@@ -20,7 +20,8 @@ router.post('/login', async (req, res) => {
                     u.IDUSUARIOS, 
                     u.PASSWORD AS passwordHash, 
                     p.IDPERSONAL, 
-                    p.NOMBRE 
+                    p.NOMBRE,
+                    p.CORREO 
                 FROM USUARIOS u 
                 JOIN PERSONAL p ON u.NOMBREUSUARIO = p.NOMBREUSUARIO 
                 WHERE u.NOMBREUSUARIO = @nombreUsuario

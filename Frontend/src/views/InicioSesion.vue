@@ -83,8 +83,8 @@ async function handleLogin(){
 
     const token = response.data.token;
 
-    // Guardar el token en el almacenamiento local
     localStorage.setItem('token', token);
+    localStorage.setItem('username', username.value);
 
     showPasswordError.value = false;
     showCustomModal('Inicio de Sesión Exitoso', '¡Bienvenido de nuevo!');

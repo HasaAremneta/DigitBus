@@ -49,7 +49,7 @@ function goToAddCard() {
 }
 
 function goBack() {
-  showCustomModal('Volver', 'Simulando volver a la página anterior.')
+  window.history.back();
 }
 
 function showCustomModal(title, message) {

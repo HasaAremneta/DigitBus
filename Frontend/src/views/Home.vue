@@ -4,17 +4,25 @@
     <header class="top-nav">
       <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       <nav class="nav-links">
-        <router-link to="/Conocenos" ><button class="btn-menu">Conócenos</button></router-link>
+        <router-link to="/Conocenos"><button class="btn-menu">Conócenos</button></router-link>
         <!--Boton de salida de sesion-->
-        <a href="#" @click.prevent="confirmarSalida" ><button class="btn-menu">Salir</button></a>
+        <a href="#" @click.prevent="showUserList"><button class="btn-menu">{{ currentUser }} <i class="pi pi-user"
+              style="font-size: large; margin-left: 5px;"></i></button></a>
         <!-- <router-link to="/login">Salir</router-link> -->
       </nav>
     </header>
+    <ul class="user-list" id="userList">
+      <li @click="irARuta('/Ajustes')" @mouseover="ajustesHover = true" @mouseleave="ajustesHover = false">
+        <i :class="ajustesHover ? 'pi pi-spin pi-cog' : 'pi pi-cog'"></i> Ajustes </li>
+      <li @click.prevent="confirmarSalida" class="option-menu"><i class="pi pi-arrow-left"></i> Cerrar Sesion</li>
+    </ul>
 
     <!-- Banner principal -->
     <section class="banner">
       <div class="banner-text">
-        <h2>Ya ha llegado!!</h2><h2 style="text-align: center;">el mejor método</h2><h2 style="float: right;">de pago a León</h2>
+        <h2>Ya ha llegado!!</h2>
+        <h2 style="text-align: center;">el mejor método</h2>
+        <h2 style="float: right;">de pago a León</h2>
       </div>
       <!-- <div class="banner-video">
         <img src="https://via.placeholder.com/300x200?text=Video" alt="¿Qué es DigitBus?" class="video-thumb" />
@@ -24,14 +32,9 @@
 
     <!-- Accesos rápidos -->
     <section class="features">
-      <div
-        class="feature-card"
-        v-for="item in accesos"
-        :key="item.titulo"
-        @click="irARuta(item.ruta)"
-      >
+      <div class="feature-card" v-for="item in accesos" :key="item.titulo" @click="irARuta(item.ruta)">
         <!-- <img :src="item.img" :alt="item.titulo" class="feature-img" /> -->
-         <i :class="item.icon" style="font-size: 2.5rem; padding: 15px;"></i>
+        <i :class="item.icon" style="font-size: 2.5rem; padding: 15px;"></i>
         <h3>{{ item.titulo }}</h3>
         <p>{{ item.descripcion }}</p>
       </div>
@@ -42,10 +45,14 @@
 <script setup>
 
 import 'primeicons/primeicons.css'
+import { ref } from 'vue';
 
 import { useRouter } from 'vue-router';
 const router = useRouter();
 
+var lstVisible = ref(false);
+const ajustesHover = ref(false);
+const currentUser = ref(localStorage.getItem("username"));
 //Función para redirigir a la página de inicio
 const irARuta = (ruta) => {
   router.push(ruta);
@@ -81,9 +88,22 @@ const accesos = [
 
 const confirmarSalida = () => {
   if (confirm('¿Estás seguro de que quieres salir?')) {
-    // Aquí puedes agregar la lógica para cerrar sesión
-    router.push('/'); // Redirige a la página de login
+    router.push('/');
   }
+}
+
+const showUserList = () => {
+  var usrlst = document.getElementById("userList");
+
+  if (lstVisible.value === false) {
+    usrlst.style.display = 'block';
+    lstVisible.value = true;
+  }
+  else {
+    usrlst.style.display = 'none';
+    lstVisible.value = false;
+  }
+
 }
 </script>
 
@@ -152,7 +172,7 @@ const confirmarSalida = () => {
   font-size: 2.4rem;
   line-height: 1;
   text-shadow: black 3px 3px 5px;
-  
+
 }
 
 .banner-text {
@@ -213,5 +233,41 @@ const confirmarSalida = () => {
   width: 100%;
   border-radius: 8px;
   margin-bottom: 10px;
+}
+
+.user-list {
+  background-color: #4e80b100;
+  color: white;
+  width: 10%;
+  justify-self: end;
+  position: absolute;
+  z-index: 99;
+  margin-right: 15px;
+  display: none;
+}
+
+.user-list li {
+  background-color: #023f7b;
+  color: white;
+  list-style: none;
+  padding: 5px;
+  width: 100%;
+}
+
+.user-list li:hover {
+  background-color: white;
+  color: #023f7b;
+  cursor: pointer;
+}
+
+@keyframes salir {
+  0%   { transform: translateX(-3px); }
+  50%  { transform: translateX(3px); }
+  100% { transform: translateX(-3px); }
+}
+
+
+.option-menu:hover i {
+  animation: salir 1s ease-in-out infinite;
 }
 </style>
