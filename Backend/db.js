@@ -5,7 +5,7 @@ const sql = require('mssql');
 const config = {
     user: 'sa',
     password: 'Hassael24.',
-    server: 'LAPTOP-URJHI7O9', 
+    server: 'DESKTOP-3HJ2A4F', 
     database: 'DigitBusProd',
     port: 1433, // Default port for SQL Server
     options: {

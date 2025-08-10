@@ -3,7 +3,6 @@
     <header class="top-nav">
       <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       <nav>
-        <router-link to="/conocenos">Conócenos</router-link>
       </nav>
     </header>
 
@@ -44,7 +43,7 @@
         <div class="card info-card-blue">
           <h3>¿Ya conoces los</h3>
           <div class="digitbeneficios-text">DigitBeneficios?</div>
-          <button class="btn btn-info">¡Quiero conocerlos!</button>
+          <router-link to="/ConocenosInisio" class="btn btn-info">¡Quiero conocerlos!</router-link>
         </div>
       </div>
     </div>

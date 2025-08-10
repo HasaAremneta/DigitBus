@@ -3,11 +3,7 @@
 <header class="top-nav">
 <img src="@/assets/img/logo_digitbus_color.svg" class="logo" alt="DigitBus logo" />
 <nav>
-        <router-link to="/home">Inicio</router-link>
-        <router-link to="/historial">Historial</router-link>
-        <router-link to="/pago-sucursal">Recargas</router-link>
-        <router-link to="/Solicitudes">Solicitar</router-link>
-        <router-link to="/Renovaciones">Renovar o Extravio</router-link>
+        <router-link to="/">Inicio sesion</router-link>
 </nav>
 </header>
  

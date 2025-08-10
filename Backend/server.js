@@ -13,9 +13,9 @@ app.use(express.json());
 const recuperaciónRoutes = require('./routes/recuperar');
 const authRoutes = require('./routes/auth');
 const usuariosRoutes = require('./routes/usuarios');
-const renovacionRoutes = require('./routes/renovaciones')
+const renovacionRoutes = require('./routes/renovacionesYextravios');
 const historialRoutes = require('./routes/historial');
-const SolicitudesRoutes = require('./routes/solicitudes');
+const SolicitudesRoutes = require('./routes/solicitudes');  
 const RecargasRoutes = require('./routes/recargas');
 
 //Enrutamiento 

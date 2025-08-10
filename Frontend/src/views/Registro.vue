@@ -1,12 +1,9 @@
 <template>
   <div class="registro-page">
     <header class="top-nav">
-      <div class="logo-container">
-        <h1 class="logo-text">Alex</h1>
-      </div>
+      <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       <nav>
-        <router-link to="/login">Iniciar sesión</router-link>
-        <router-link to="/registro">Registrarse</router-link>
+        <router-link to="/">Inicio sesion</router-link>
       </nav>
     </header>
 
@@ -15,7 +12,7 @@
         <div class="col-lg-6 col-md-8">
           <div class="card registro-card">
             <h2 class="text-center">Crear cuenta</h2>
-            <p class="subtitle text-center">Únete a Alex y comienza tu experiencia</p>
+            <p class="subtitle text-center">Únete a DigitBus y comienza tu experiencia</p>
             
             <form @submit.prevent="handleRegistro">
               <div class="mb-3">
@@ -422,5 +419,24 @@ async function handleRegistro() {
 
 .custom-modal-content button:hover {
   background-color: #0056b3;
+}
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+  height: 32px;
+}
+
+.top-nav nav a {
+  margin-left: 1.5rem;
+  text-decoration: none;
+  color: #2a3547;
+  font-weight: 500;
 }
 </style>

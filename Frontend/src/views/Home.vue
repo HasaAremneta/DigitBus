@@ -68,8 +68,8 @@ const accesos = [
     ruta: '/Solicitudes'
   },
   {
-    titulo: 'Renovaciones',
-    descripcion: 'Renueva tu servicio de forma sencilla.()',
+    titulo: 'Renovaciones y extravíos',
+    descripcion: 'Renueva tu servicio de forma sencilla o reporta extravíos.',
     img: 'https://via.placeholder.com/150?text=Renovaciones',
     ruta: '/Renovaciones'
   }

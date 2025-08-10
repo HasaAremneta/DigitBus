@@ -13,6 +13,7 @@ import Solicitudes from '../views/Solicitudes.vue'
 import Renovaciones from '../views/Renovaciones.vue'
 import PagoSucursal from '../views/PagoSucursal.vue'
 import Conocenos from '../views/Conocenos.vue'
+import ConocenosInisio from '../views/ConocenosInisio.vue'
 
 
 
@@ -28,7 +29,8 @@ const routes = [
   {path: '/recuperacion', component: Recuperacion },
   {path: '/Solicitudes', component: Solicitudes},
   {path: '/Renovaciones', component: Renovaciones},
-  {path: '/Conocenos', component: Conocenos}
+  {path: '/Conocenos', component: Conocenos},
+  {path: '/ConocenosInisio', component: ConocenosInisio }
 ]
 
 const router = createRouter({

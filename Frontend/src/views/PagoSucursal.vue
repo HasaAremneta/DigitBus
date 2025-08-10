@@ -4,7 +4,10 @@
       <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       <nav>
         <router-link to="/home">Inicio</router-link>
-        <router-link to="/conocenos">Conócenos</router-link>
+        <router-link to="/historial">Historial</router-link>
+        <router-link to="/Solicitudes">Solicitar</router-link>
+        <router-link to="/Renovaciones">Renovar o Extravio</router-link>
+        <router-link to="/Conocenos">Conócenos</router-link>
       </nav>
     </header>
 

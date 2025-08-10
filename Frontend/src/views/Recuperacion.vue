@@ -1,12 +1,9 @@
 <template>
   <div class="recuperacion-page">
     <header class="top-nav">
-      <div class="logo-container">
-        <h1 class="logo-text">Alex</h1>
-      </div>
+      <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       <nav>
-        <router-link to="/login">Iniciar sesión</router-link>
-        <router-link to="/registro">Registrarse</router-link>
+        <router-link to="/">Inicio sesion</router-link>
       </nav>
     </header>
 
@@ -314,5 +311,24 @@ function resetForm() {
 .back-link:hover {
   color: #1a6dff;
   text-decoration: none;
+}
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.logo {
+  height: 32px;
+}
+
+.top-nav nav a {
+  margin-left: 1.5rem;
+  text-decoration: none;
+  color: #2a3547;
+  font-weight: 500;
 }
 </style>

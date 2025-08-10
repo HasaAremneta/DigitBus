@@ -6,14 +6,14 @@ const authenticateToken = require('../middlewares/authMiddleware');
 
 // Obtener historial completo (recargas, renovaciones, solicitudes)
 router.get('/', authenticateToken, async (req, res) => {
-    const idUsuario = req.usuario.idUsuario;// Obtener ID de usuario del token
+    const idPersonal = req.usuario.idPersonal;// Obtener ID de usuario del token
     try {
         const pool = await connectToDB();
         console.log("Usuario desde token:", req.usuario);
         
         // Consulta para obtener recargas y renovaciones (de la tabla RECARGAS)
         const recargas = await pool.request()
-        .input('idUsuario', sql.Int, idUsuario)
+        .input('idPersonal', sql.Int, idPersonal)
         .query(
             ` SELECT r.IDRECARGA, r.IDTARJETA, t.NUMTARJETA,
                        r.MONTO, r.TIPOTRANSACCION, r.STATUS, r.FECHARECARGA,
@@ -24,14 +24,14 @@ router.get('/', authenticateToken, async (req, res) => {
                 JOIN ESTABLECIMIENTO e ON r.IDESTABLECIMIENTO = e.IDESTABLECIMIENTO
                 JOIN PERSONAL p ON t.IDPERSONAL = p.IDPERSONAL
                 JOIN USUARIOS u ON u.NOMBREUSUARIO = p.NOMBREUSUARIO
-                WHERE u.IDUSUARIO = @idUsuario
+                WHERE p.IDPERSONAL = @idPersonal
                 ORDER BY r.FECHARECARGA DESC`
         );
         console.log("Recargas obtenidas:", recargas.recordset);
 
         // Consulta para obtener solicitudes
         const solicitudes = await pool.request()
-        .input('idUsuario', sql.Int, idUsuario)
+        .input('idPersonal', sql.Int, idPersonal)
         .query(
             `SELECT s.IDSOLICITUD, s.IDPERSONAL,
                        p.NOMBRE + ' ' + p.APELLIDOPATERNO AS NOMBREPERSONAL,
@@ -39,7 +39,7 @@ router.get('/', authenticateToken, async (req, res) => {
                 FROM SOLICITUDES s
                 JOIN PERSONAL p ON s.IDPERSONAL = p.IDPERSONAL
                 JOIN USUARIOS u ON u.NOMBREUSUARIO = p.NOMBREUSUARIO
-                WHERE u.IDUSUARIO = @idUsuario
+                WHERE p.IDPERSONAL = @idPersonal
                 ORDER BY s.FECHASOLICITUD DESC`
         );
 
@@ -48,6 +48,7 @@ router.get('/', authenticateToken, async (req, res) => {
             solicitudes: solicitudes.recordset
         });
     } catch (err) {
+        console.error('Error al obtener el historial:', err);
         res.status(500).json({ 
             error: 'Error al obtener el historial', 
             details: err.message 
@@ -66,12 +67,14 @@ router.get('/tarjeta/:idTarjeta', async (req, res) => {
         const recargas = await pool.request()
             .input('idTarjeta', sql.Int, idTarjeta)
             .query(
-                `SELECT r.IDRECARGA, r.MONTO, r.TIPOTRANSACCION, r.STATUS, r.FECHARECARGA,
-                       e.NOMBREESTABLECIMIENTO
-                FROM RECARGAS r
-                JOIN ESTABLECIMIENTO e ON r.IDESTABLECIMIENTO = e.IDESTABLECIMIENTO
-                WHERE r.IDTARJETA = @idTarjeta
-                ORDER BY r.FECHARECARGA DESC`
+                `SELECT s.IDSOLICITUD, s.IDPERSONAL,
+                    p.NOMBRE + ' ' + p.APELLIDOPATERNO AS NOMBREPERSONAL,
+                    s.TIPOTABLETA, s.FECHASOLICITUD, s.STATUS
+                FROM SOLICITUDES s
+                JOIN PERSONAL p ON s.IDPERSONAL = p.IDPERSONAL
+                JOIN USUARIOS u ON u.NOMBREUSUARIO = p.NOMBREUSUARIO
+                WHERE p.IDPERSONAL = @idPersonal
+                ORDER BY s.FECHASOLICITUD DES`
             );
 
         // Información de la tarjeta

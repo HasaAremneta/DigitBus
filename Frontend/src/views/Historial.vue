@@ -4,7 +4,10 @@
       <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       <nav>
         <router-link to="/home">Inicio</router-link>
-        <router-link to="/conocenos">Conócenos</router-link>
+        <router-link to="/pago-sucursal">Recargas</router-link>
+        <router-link to="/Solicitudes">Solicitar</router-link>
+        <router-link to="/Renovaciones">Renovar o Extravio</router-link>
+        <router-link to="/Conocenos">Conócenos</router-link>
       </nav>
     </header>
 
@@ -44,10 +47,12 @@ onMounted(async () => {
     const response = await obtenerHistorial();
 
     // Mapea las recargas al formato que usas en la UI
-    historial.value = response.data.recargas.map(item => ({
-      fecha: new Date(item.FECHARECARGA).toLocaleDateString(),
-      cantidad: item.MONTO,
-    }));
+    if(response.data && response.data.recargas) {
+      historial.value = response.data.recargas.map(item => ({
+        fecha: new Date(item.FECHARECARGA).toLocaleDateString(),
+        cantidad: item.MONTO,
+      }));
+    }
 
     // Calcula el saldo sumando todos los montos de las recargas
     saldo.value = response.data.recargas.reduce((acc, r) => acc + r.MONTO, 0);
@@ -55,15 +60,7 @@ onMounted(async () => {
   } catch (error) {
     console.error("Error al obtener el historial:", error);
   }
-})
-
-// const saldo = ref(135.00)
-
-// const historial = ref([
-//   { fecha: '2025-07-25', cantidad: 50 },
-//   { fecha: '2025-07-21', cantidad: 40 },
-//   { fecha: '2025-07-15', cantidad: 45 }
-// ])
+});
 </script>
 
 <style scoped>
