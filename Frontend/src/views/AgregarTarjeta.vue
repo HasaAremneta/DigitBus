@@ -8,29 +8,25 @@
       </nav>
     </header>
 
-    <div class="container container-main">
+    <button class="btn-new-card" @click="showForm">Agregar nueva tarjeta</button>
+
+    <div class="container container-main" id="formCard">
       <div class="card-form">
+        <i class="pi pi-times close-btn" @click="closeForm"></i>
         <h2>Agregar tarjeta</h2>
         <form @submit.prevent="saveCard">
           <div class="mb-3">
             <label for="cardNumber" class="form-label">Número de tarjeta:</label>
-            <input
-              type="text"
-              class="form-control"
-              id="cardNumber"
-              v-model="cardNumber"
-              @input="formatCardNumber"
-              placeholder="xxxx-xxxx-xxxx-xxxx"
-              maxlength="19"
-            >
+            <input type="text" class="form-control" id="cardNumber" v-model="cardNumber" @input="formatCardNumber"
+              placeholder="xxxx-xxxx-xxxx-xxxx" maxlength="19">
           </div>
           <div class="mb-3">
             <label for="cardType" class="form-label">Selecciona el tipo de tarjeta:</label>
             <select class="form-select" id="cardType" v-model="cardType">
               <option value="" disabled>Tipo de tarjeta</option>
               <option value="Estudiante">Estudiante</option>
-              <option value="Adulto Mayor">Adulto Mayor</option>
-              <option value="Discapacitado">Discapacitado</option>
+              <option value="AdultoM/CapacidadesD">Adulto Mayor / Capacidades Diferentes</option>
+              <option value="General">General</option>
             </select>
           </div>
           <div class="d-grid gap-2">
@@ -38,6 +34,24 @@
           </div>
         </form>
       </div>
+    </div>
+
+    <div class="tbl-tarjetas">
+      <table>
+        <thead>
+          <tr>
+            <th>No. Tarjeta</th>
+            <th>Tipo</th>
+            <th>Saldo</th>
+            <th>Fecha Emision</th>
+            <th>Fecha Vencimiento</th>
+          </tr>
+
+        </thead>
+        <tbody>
+
+        </tbody>
+      </table>
     </div>
 
     <div v-if="showModal" class="custom-modal-overlay">
@@ -87,14 +101,30 @@ function showCustomModal(title, message) {
 function closeCustomModal() {
   showModal.value = false
 }
+
+const showForm = () => {
+  const form = document.getElementById("formCard");
+  form.style.display = 'flex';
+}
+const closeForm = () => {
+  const form = document.getElementById("formCard");
+  form.style.display = 'none';
+}
+
+
 </script>
+
+
+
 
 <style scoped>
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css');
+
 body {
   font-family: 'Inter', sans-serif;
   background-color: #f8f9fa;
 }
+
 .top-nav {
   display: flex;
   justify-content: space-between;
@@ -103,26 +133,65 @@ body {
   background: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
+
 .logo {
   height: 32px;
 }
+
 .top-nav nav a {
   margin-left: 1.5rem;
   text-decoration: none;
   color: #2a3547;
   font-weight: 500;
 }
+
 .top-nav nav a.router-link-exact-active {
   color: #1a6dff;
   text-decoration: underline;
 }
+
+.tbl-tarjetas {
+  display: flex;
+  width: 100%;
+  background-color: blue;
+  align-items: center;
+  justify-items: center;
+}
+
+.tbl-tarjetas table {
+  width: 100%;
+  background-color: white;
+  border-radius: 10px;
+}
+
+.tbl-tarjetas table th {
+  font-size: large;
+}
+
 .container-main {
   margin-top: 3rem;
-  display: flex;
   justify-content: center;
   align-items: flex-start;
   min-height: calc(100vh - 120px);
+  position: absolute;
+  z-index: 99;
+  display: none;
 }
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #6c757d;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #dc3545;
+}
+
 .card-form {
   background-color: #ffffff;
   padding: 3rem 4rem;
@@ -131,13 +200,16 @@ body {
   text-align: center;
   width: 100%;
   max-width: 500px;
+  position: relative;
 }
+
 .card-form h2 {
   color: #343a40;
   margin-bottom: 3rem;
   font-weight: 600;
   font-size: 2.2rem;
 }
+
 .form-label {
   font-weight: bold;
   color: #007bff;
@@ -146,7 +218,9 @@ body {
   text-align: left;
   font-size: 1.1rem;
 }
-.form-control, .form-select {
+
+.form-control,
+.form-select {
   border: none;
   border-bottom: 2px solid #007bff;
   border-radius: 0;
@@ -156,9 +230,12 @@ body {
   font-size: 1.1rem;
   color: #343a40;
 }
-.form-control:focus, .form-select:focus {
+
+.form-control:focus,
+.form-select:focus {
   border-color: #0056b3;
 }
+
 .form-select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -168,6 +245,7 @@ body {
   background-position: right 0.75rem center;
   background-size: 16px 12px;
 }
+
 .btn-save-card {
   background-color: #343a40;
   border-color: #343a40;
@@ -180,10 +258,12 @@ body {
   width: 100%;
   margin-top: 1.5rem;
 }
+
 .btn-save-card:hover {
   background-color: #212529;
   border-color: #1a1d20;
 }
+
 .custom-modal-overlay {
   position: fixed;
   top: 0;
@@ -196,6 +276,7 @@ body {
   align-items: center;
   z-index: 1050;
 }
+
 .custom-modal-content {
   background-color: white;
   padding: 2rem;
@@ -205,14 +286,17 @@ body {
   max-width: 400px;
   width: 90%;
 }
+
 .custom-modal-content h4 {
   margin-bottom: 1rem;
   color: #343a40;
 }
+
 .custom-modal-content p {
   margin-bottom: 1.5rem;
   color: #6c757d;
 }
+
 .custom-modal-content button {
   background-color: #007bff;
   color: white;
@@ -222,6 +306,7 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 .custom-modal-content button:hover {
   background-color: #0056b3;
 }
