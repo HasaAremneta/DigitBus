@@ -148,7 +148,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { renovarYExtravios, solicitudExtravios } from '@/Services/renovacionesYextravios.js'
 import axios from 'axios'
 
@@ -173,11 +173,14 @@ const accionTitle = computed(() =>
     accion.value === 'renovacion' ? 'renovación' : ''
 )
 
+
+
+
 const validaTipo = () => {
   if (accion.value === 'renovacion') {
     var idPersonal = localStorage.getItem('idPersonal');
     const token = localStorage.getItem('token');
-    axios.get('http://localhost:3000/api/renovaciones/tarjetas/' + idPersonal, {
+    axios.get('http://localhost:3000/api/renovaciones/tarjetas/' + idPers1onal, {
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -27,8 +27,8 @@
           <!-- <input type="text" placeholder="**** **** **** ****" v-model="tarjeta" /> -->
           <select name="" id="" v-model="tarjeta">
             <option value="" default>Selecciona tu tarjeta</option>
-            <option v-for="item in tarjetas" :key="item.numTarjeta" :value="item.idTarjeta">
-              {{ item.numTarjeta }} ({{ item.tipotarjeta }})
+            <option v-for="item in tarjetas" :key="item.NUMTARJETA" :value="item.IDTARJETA">
+              {{ item.NUMTARJETA }} ({{ item.TIPO }})
             </option>
           </select>
 
@@ -64,24 +64,30 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import 'primeicons/primeicons.css'
 import axios from 'axios'
 
 
 const monto = ref('')
 const tarjeta = ref('')
-const tarjetas = ref([
-  { idTarjeta: 1, numTarjeta: '*******1234', tipotarjeta: 'Estudiante' },
-  { idTarjeta: 2, numTarjeta: '*******5678', tipotarjeta: 'General' },
-  { idTarjeta: 3, numTarjeta: '*******9012', tipotarjeta: 'Tercera Edad' },
-])
+const tarjetas = ref([])
 
 const formularioValido = computed(() => {
 
   return monto.value && tarjeta.value
 
 })
+
+const obtenerTarjetasUsuario = () => {
+  const idPersonal = localStorage.getItem('idPersonal');
+  axios('http://localhost:3000/api/usuarios/tarjetasU/' + idPersonal)
+    .then(response => {
+      tarjetas.value = response.data.recordset;
+      console.log(tarjetas.value);
+    });
+}
+onMounted(obtenerTarjetasUsuario);
 
 const enviarPago = () => {
   if (formularioValido.value) {

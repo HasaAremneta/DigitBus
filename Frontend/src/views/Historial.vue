@@ -12,55 +12,64 @@
     </header>
 
     <main class="contenido">
-      <h1>Saldo actual</h1>
-      <div class="saldo-box">
-        $<span>{{ saldo }}</span> MXN
+      <h1>Mis Tarjetas y Saldos</h1>
+
+      <div v-if="tarjetas.length === 0">No tienes tarjetas registradas.</div>
+
+      <div v-for="tarjeta in tarjetas" :key="tarjeta.IDTARJETA" class="tarjeta-box">
+        <h2>Tarjeta: {{ tarjeta.NUMTARJETA }} ({{ tarjeta.TIPO }})</h2>
+        <div class="saldo-box">
+          Saldo actual: ${{ tarjeta.SALDO.toFixed(2) }} MXN
+        </div>
+
+        <h3>Historial de recargas</h3>
+        <ul v-if="recargasPorTarjeta[tarjeta.IDTARJETA]?.length > 0" class="lista-recargas">
+          <li v-for="recarga in recargasPorTarjeta[tarjeta.IDTARJETA]" :key="recarga.IDRECARGA" class="item-recarga">
+            <span class="fecha">{{ new Date(recarga.FECHARECARGA).toLocaleDateString('es-MX') }}</span>
+            <span class="cantidad">+ ${{ recarga.MONTO.toFixed(2) }}</span>
+            <span class="establecimiento" v-if="recarga.NOMBREESTABLECIMIENTO">({{ recarga.NOMBREESTABLECIMIENTO }})</span>
+          </li>
+        </ul>
+        <p v-else>No hay recargas para esta tarjeta.</p>
       </div>
-
-      <div class="acciones">
-      <router-link to="/pago-sucursal" class="btn-accion">Hacer recarga</router-link>
-      <router-link to="/home" class="btn-accion secundario">Volver a Inicio</router-link>
-      </div>
-
-
-      <h2>Historial de recargas</h2>
-      <ul class="lista-recargas">
-        <li v-for="(recarga, index) in historial" :key="index" class="item-recarga">
-          <span class="fecha">{{ recarga.fecha }}</span>
-          <span class="cantidad">+ ${{ recarga.cantidad }}</span>
-        </li>
-      </ul>
     </main>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { obtenerHistorial } from '@/Services/historial.js'
-import { useRouter } from 'vue-router'
+import axios from 'axios'
 
-const saldo = ref(0)
-const historial = ref([])
+const tarjetas = ref([])
+const recargasPorTarjeta = ref({})  // clave: idTarjeta, valor: array de recargas
 
-onMounted(async () => {
-  try {
-    const response = await obtenerHistorial();
-
-    // Mapea las recargas al formato que usas en la UI
-    if(response.data && response.data.recargas) {
-      historial.value = response.data.recargas.map(item => ({
-        fecha: new Date(item.FECHARECARGA).toLocaleDateString(),
-        cantidad: item.MONTO,
-      }));
-    }
-
-    // Calcula el saldo sumando todos los montos de las recargas
-    saldo.value = response.data.recargas.reduce((acc, r) => acc + r.MONTO, 0);
-
-  } catch (error) {
-    console.error("Error al obtener el historial:", error);
+const cargarTarjetasYRecargas = async () => {
+  const idPersonal = localStorage.getItem('idPersonal')
+  if (!idPersonal) {
+    console.error('No hay idPersonal en localStorage')
+    return
   }
-});
+
+  try {
+    // Obtener tarjetas
+    const resTarjetas = await axios.get(`http://localhost:3000/api/historial/tarjetas/${idPersonal}`)
+    tarjetas.value = resTarjetas.data.tarjetas || []
+
+    // Obtener recargas para cada tarjeta en paralelo
+    await Promise.all(
+      tarjetas.value.map(async (tarjeta) => {
+        const resRecargas = await axios.get(`http://localhost:3000/api/historial/recargas/${tarjeta.IDTARJETA}`)
+        recargasPorTarjeta.value[tarjeta.IDTARJETA] = resRecargas.data.recargas || []
+      })
+    )
+  } catch (error) {
+    console.error('Error cargando tarjetas o recargas:', error)
+  }
+}
+
+onMounted(() => {
+  cargarTarjetasYRecargas()
+})
 </script>
 
 <style scoped>
@@ -69,7 +78,6 @@ onMounted(async () => {
   min-height: 100vh;
   font-family: 'Vertiga', sans-serif;
 }
-
 .top-nav {
   display: flex;
   justify-content: space-between;
@@ -78,84 +86,65 @@ onMounted(async () => {
   background: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
-
 .logo {
   height: 32px;
 }
-
 .top-nav nav a {
   margin-left: 1.5rem;
   text-decoration: none;
   color: #2a3547;
   font-weight: 500;
 }
-
 .contenido {
   max-width: 900px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
-
 .saldo-box {
   background-color: #1a6dff;
   color: white;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   padding: 1rem;
   border-radius: 12px;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
-
-.acciones {
- display: flex;
-  justify-content: center; 
-  gap: 1rem;
-  margin: 2rem 0;
-}
-
-.btn-accion {
-  background-color: var(--azul, #1a6dff);
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: background-color 0.3s;
-  box-shadow: 0 4px 0 #1548d6;
-}
-
-.btn-accion:hover {
-  background-color: #1548d6;
-}
-
-.btn-accion.secundario {
-  background-color: #ccc;
-  color: #2a3547;
-  box-shadow: 0 4px 0 #aaa;
-}
-
-.btn-accion.secundario:hover {
-  background-color: #b2b2b2;
-}
-
-
 .lista-recargas {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 0 0 2rem 0;
 }
-
 .item-recarga {
   background: white;
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
   display: flex;
   justify-content: space-between;
   font-size: 1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.fecha {
+  flex: 1;
+}
+.cantidad {
+  flex: 1;
+  font-weight: bold;
+  color: #1a6dff;
+  text-align: right;
+}
+.establecimiento {
+  flex: 2;
+  text-align: right;
+  font-style: italic;
+  color: #666;
+}
+.tarjeta-box {
+  margin-bottom: 3rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 </style>
-

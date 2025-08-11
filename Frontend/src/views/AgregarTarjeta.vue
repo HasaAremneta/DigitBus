@@ -3,12 +3,12 @@
     <header class="top-nav">
       <img src="@/assets/img/logo_digitbus_color.svg" alt="DigitBus" class="logo" />
       <nav>
-        <router-link to="/">Inicio</router-link>
+        <router-link to="/home">Inicio</router-link>
         <router-link to="/conocenos">Conócenos</router-link>
       </nav>
     </header>
 
-    <button class="btn-new-card" @click="showForm">Agregar nueva tarjeta</button>
+    <button class="btn-new-card" @click="validacantarjetas">Agregar nueva tarjeta</button>
 
     <div class="container container-main" id="formCard">
       <div class="card-form">
@@ -24,9 +24,9 @@
             <label for="cardType" class="form-label">Selecciona el tipo de tarjeta:</label>
             <select class="form-select" id="cardType" v-model="cardType">
               <option value="" disabled>Tipo de tarjeta</option>
-              <option value="Estudiante">Estudiante</option>
-              <option value="AdultoM/CapacidadesD">Adulto Mayor / Capacidades Diferentes</option>
-              <option value="General">General</option>
+              <option value="ESTUDIANTE">Estudiante</option>
+              <option value="ADULTOM/CAPACIDADESD">Adulto Mayor / Capacidades Diferentes</option>
+              <option value="GENERAL">General</option>
             </select>
           </div>
           <div class="d-grid gap-2">
@@ -49,8 +49,20 @@
 
         </thead>
         <tbody>
-
+          <tr v-for="(tarjeta, index) in tarjetasU" :key="tarjeta.IDTARJETA">
+            <td>{{ tarjeta.NUMTARJETA }}</td>
+            <td>{{ tarjeta.TIPO }}</td>
+            <td>{{ tarjeta.SALDO }}</td>
+            <td>{{ new Date(tarjeta.FECHAEMISION).toLocaleDateString() }}</td>
+            <td>{{ new Date(tarjeta.FECHAVECIMIENTO).toLocaleDateString() }}</td>
+            <td>
+              <button @click="eliminarTarjeta(tarjeta.IDTARJETA)" class="p-button-rounded p-button-danger p-button-sm">
+                <i class="pi pi-trash"></i>
+              </button>
+            </td>
+          </tr>
         </tbody>
+
       </table>
     </div>
 
@@ -65,24 +77,89 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import axios from 'axios'
+import { onMounted, ref } from 'vue'
 
 const cardNumber = ref('')
 const cardType = ref('')
 const showModal = ref(false)
 const modalTitle = ref('')
 const modalMessage = ref('')
+const tarjetasU = ref([])
+
+
+
+
+
+const obtenerTarjetasUsuario = () => {
+  const idPersonal = localStorage.getItem('idPersonal');
+  axios('http://localhost:3000/api/usuarios/tarjetasU/' + idPersonal)
+    .then(response => {
+      tarjetasU.value = response.data.recordset;
+      console.log(tarjetasU.value);
+    });
+}
+onMounted(obtenerTarjetasUsuario);
+
+const validacantarjetas = () => {
+  if (tarjetasU.value.length >= 3) {
+    showCustomModal('Error', 'No puedes guardar mas de 3 tarjetas en tu cuenta.')
+
+    console.warn(modalMessage.value);
+  } else {
+    showForm();
+  }
+}
 
 function saveCard() {
   if (cardNumber.value.length === 19 && cardType.value !== '') {
-    showCustomModal('Tarjeta Guardada', 'La tarjeta ha sido guardada exitosamente.')
-    // Aquí podrías enviar los datos a un backend si lo necesitas
+    const idPersonal = localStorage.getItem('idPersonal');
+    const token = localStorage.getItem('token');
+
+    const nuevaTarjeta = {
+      idPersonal: idPersonal,
+      numTarjeta: cardNumber.value,
+      tipo: cardType.value
+    };
+
+    axios.post('http://localhost:3000/api/usuarios/nuevaTarjeta', nuevaTarjeta)
+      .then(response => {
+        console.log('Tarjeta creada:', response.data);
+        showCustomModal('Tarjeta Guardada', 'La tarjeta ha sido guardada exitosamente.')
+        obtenerTarjetasUsuario();
+      })
+      .catch(error => {
+        console.error('Error al agregar tarjeta:', error.response?.data || error.message);
+        showCustomModal('Error al Guardar', 'Por favor, verifique que el número de tarjeta sea válido (XXXX-XXXX-XXXX-XXXX) y seleccione un tipo de tarjeta.')
+      });
+
+
     cardNumber.value = ''
     cardType.value = ''
   } else {
     showCustomModal('Error al Guardar', 'Por favor, ingrese un número de tarjeta válido (XXXX-XXXX-XXXX-XXXX) y seleccione un tipo de tarjeta.')
   }
 }
+
+const eliminarTarjeta = async (idTarjeta) => {
+  try {
+    const confirmacion = confirm('¿Seguro que deseas eliminar esta tarjeta?');
+    if (!confirmacion) return;
+
+    const response = await axios.delete(`http://localhost:3000/api/usuarios/eliminarTarjeta/${idTarjeta}`);
+
+    if (response.data.success) {
+      tarjetasU.value = tarjetasU.value.filter(t => t.IDTARJETA !== idTarjeta);
+      modalMessage.value = 'Tarjeta eliminada correctamente.';
+    } else {
+      modalMessage.value = response.data.message || 'No se pudo eliminar la tarjeta.';
+    }
+  } catch (error) {
+    console.error('Error al eliminar tarjeta:', error);
+    modalMessage.value = 'Ocurrió un error al eliminar la tarjeta.';
+  }
+};
+
 
 function formatCardNumber() {
   let digitsOnly = cardNumber.value.replace(/\D/g, '')
@@ -153,7 +230,6 @@ body {
 .tbl-tarjetas {
   display: flex;
   width: 100%;
-  background-color: blue;
   align-items: center;
   justify-items: center;
 }
@@ -162,10 +238,19 @@ body {
   width: 100%;
   background-color: white;
   border-radius: 10px;
+  margin: 2%;
 }
 
 .tbl-tarjetas table th {
+  background-color: #0056b3;
+  color: white;
   font-size: large;
+  padding: 15px;
+}
+
+.tbl-tarjetas table td {
+  border: 2px solid #0056b3;
+  margin: 10px;
 }
 
 .container-main {
@@ -309,5 +394,15 @@ body {
 
 .custom-modal-content button:hover {
   background-color: #0056b3;
+}
+
+.btn-new-card {
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(63, 131, 63);
+  color: white;
+  padding: 10px;
+  margin: 20px 40% 20px 40%;
+  font-size: x-large;
 }
 </style>
